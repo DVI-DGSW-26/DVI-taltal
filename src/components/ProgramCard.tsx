@@ -17,9 +17,11 @@ const TONE_BADGE = {
 export function ProgramCard({
   program,
   categoryLabels,
+  onOpen,
 }: {
   program: Program;
   categoryLabels: Record<string, string>;
+  onOpen: (program: Program) => void;
 }) {
   const { tone, label } = deadlineTone(program.application_end_at);
   const amount = formatAmount(program.support_amount_max) ?? program.support_amount_text;
@@ -51,6 +53,11 @@ export function ProgramCard({
       <h3 className="mt-2 text-base leading-snug font-semibold">
         <Link
           href={`/programs/${program.id}`}
+          onClick={(e) => {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+            e.preventDefault();
+            onOpen(program);
+          }}
           className="hover:text-brand-600 line-clamp-2 after:absolute after:inset-0"
         >
           {program.title}

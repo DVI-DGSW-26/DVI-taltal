@@ -1,12 +1,18 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Heart, RotateCcw } from "lucide-react";
 import { useCategories, useProgramQueryState } from "@/lib/hooks";
 import { REGION_ORDER, categoryLabelMap, regionLabel } from "@/lib/labels";
 
 function toggle(list: string[], value: string): string[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
+}
+
+function sameSet(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  const set = new Set(b);
+  return a.every((v) => set.has(v));
 }
 
 function dateToIso(date: string, isEnd: boolean): string | undefined {
@@ -48,6 +54,26 @@ export function Filters() {
   const { query, patch, push } = useProgramQueryState();
   const { data: categories } = useCategories();
 
+  const [optimisticRegions, setOptimisticRegions] = useState<string[] | null>(null);
+  const [optimisticCategories, setOptimisticCategories] = useState<string[] | null>(null);
+  const [optimisticFavorite, setOptimisticFavorite] = useState<{ value: boolean | undefined } | null>(
+    null,
+  );
+
+  if (optimisticRegions !== null && sameSet(optimisticRegions, query.regions)) {
+    setOptimisticRegions(null);
+  }
+  if (optimisticCategories !== null && sameSet(optimisticCategories, query.categories)) {
+    setOptimisticCategories(null);
+  }
+  if (optimisticFavorite !== null && optimisticFavorite.value === query.favorite) {
+    setOptimisticFavorite(null);
+  }
+
+  const activeRegions = optimisticRegions ?? query.regions;
+  const activeCategories = optimisticCategories ?? query.categories;
+  const activeFavorite = optimisticFavorite ? optimisticFavorite.value : query.favorite;
+
   const categoryOptions = useMemo(() => {
     const map = categoryLabelMap(categories);
     if (categories && categories.length > 0) {
@@ -73,8 +99,12 @@ export function Filters() {
           {REGION_ORDER.map((code) => (
             <Chip
               key={code}
-              active={query.regions.includes(code)}
-              onClick={() => patch({ regions: toggle(query.regions, code) })}
+              active={activeRegions.includes(code)}
+              onClick={() => {
+                const next = toggle(activeRegions, code);
+                setOptimisticRegions(next);
+                patch({ regions: next });
+              }}
             >
               {regionLabel(code)}
             </Chip>
@@ -88,8 +118,12 @@ export function Filters() {
           {categoryOptions.map(({ code, label }) => (
             <Chip
               key={code}
-              active={query.categories.includes(code)}
-              onClick={() => patch({ categories: toggle(query.categories, code) })}
+              active={activeCategories.includes(code)}
+              onClick={() => {
+                const next = toggle(activeCategories, code);
+                setOptimisticCategories(next);
+                patch({ categories: next });
+              }}
             >
               {label}
             </Chip>
@@ -122,15 +156,19 @@ export function Filters() {
         <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
           <input
             type="checkbox"
-            checked={query.favorite === true}
-            onChange={(e) => patch({ favorite: e.target.checked ? true : undefined })}
+            checked={activeFavorite === true}
+            onChange={(e) => {
+              const next = e.target.checked ? true : undefined;
+              setOptimisticFavorite({ value: next });
+              patch({ favorite: next });
+            }}
             className="peer sr-only"
           />
           <span className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 peer-checked:border-red-400 peer-checked:bg-red-50 peer-checked:text-red-600 peer-focus-visible:ring-2 peer-focus-visible:ring-gray-400 dark:border-gray-700 dark:peer-checked:bg-red-900/20">
             <Heart
               size={15}
               aria-hidden
-              className={query.favorite === true ? "fill-red-500 text-red-500" : ""}
+              className={activeFavorite === true ? "fill-red-500 text-red-500" : ""}
             />
             관심만 보기
           </span>
@@ -139,7 +177,10 @@ export function Filters() {
         {hasFilters && (
           <button
             type="button"
-            onClick={() =>
+            onClick={() => {
+              setOptimisticRegions([]);
+              setOptimisticCategories([]);
+              setOptimisticFavorite({ value: undefined });
               push({
                 q: "",
                 categories: [],
@@ -150,8 +191,8 @@ export function Filters() {
                 similar: false,
                 page: 1,
                 size: query.size,
-              })
-            }
+              });
+            }}
             className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800"
           >
             <RotateCcw size={15} aria-hidden />
