@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useProgramQueryState } from "@/lib/hooks";
 
@@ -15,10 +16,18 @@ function windowPages(current: number, total: number): number[] {
 
 export function Pagination({ page, pages, total }: { page: number; pages: number; total: number }) {
   const { patch } = useProgramQueryState();
+  const [optimisticPage, setOptimisticPage] = useState<number | null>(null);
+
+  if (optimisticPage !== null && optimisticPage === page) {
+    setOptimisticPage(null);
+  }
+  const activePage = optimisticPage ?? page;
+
   if (pages <= 1) return null;
 
   const go = (p: number) => {
-    if (p < 1 || p > pages || p === page) return;
+    if (p < 1 || p > pages || p === activePage) return;
+    setOptimisticPage(p);
     patch({ page: p }, false);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -28,7 +37,7 @@ export function Pagination({ page, pages, total }: { page: number; pages: number
       <button
         type="button"
         onClick={() => go(1)}
-        disabled={page <= 1}
+        disabled={activePage <= 1}
         aria-label="첫 페이지로"
         className="inline-flex h-9 items-center rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
       >
@@ -36,22 +45,22 @@ export function Pagination({ page, pages, total }: { page: number; pages: number
       </button>
       <button
         type="button"
-        onClick={() => go(page - 1)}
-        disabled={page <= 1}
+        onClick={() => go(activePage - 1)}
+        disabled={activePage <= 1}
         className="inline-flex h-9 items-center gap-0.5 rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
       >
         <ChevronLeft size={18} aria-hidden />
         <span className="hidden sm:inline">이전</span>
       </button>
 
-      {windowPages(page, pages).map((p) => (
+      {windowPages(activePage, pages).map((p) => (
         <button
           key={p}
           type="button"
           onClick={() => go(p)}
-          aria-current={p === page ? "page" : undefined}
+          aria-current={p === activePage ? "page" : undefined}
           className={`h-9 min-w-9 rounded-lg px-2 text-sm ${
-            p === page
+            p === activePage
               ? "bg-brand-500 font-semibold text-white"
               : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
           }`}
@@ -62,8 +71,8 @@ export function Pagination({ page, pages, total }: { page: number; pages: number
 
       <button
         type="button"
-        onClick={() => go(page + 1)}
-        disabled={page >= pages}
+        onClick={() => go(activePage + 1)}
+        disabled={activePage >= pages}
         className="inline-flex h-9 items-center gap-0.5 rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
       >
         <span className="hidden sm:inline">다음</span>
@@ -72,7 +81,7 @@ export function Pagination({ page, pages, total }: { page: number; pages: number
       <button
         type="button"
         onClick={() => go(pages)}
-        disabled={page >= pages}
+        disabled={activePage >= pages}
         aria-label="마지막 페이지로"
         className="inline-flex h-9 items-center rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
       >
