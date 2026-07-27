@@ -7,7 +7,13 @@ import { EyeOff, Loader2 } from "lucide-react";
 import { adminApi } from "@/lib/admin";
 import { errorMessage } from "@/lib/api";
 
-export function HideButton({ programId }: { programId: number }) {
+export function HideButton({
+  programId,
+  onHidden,
+}: {
+  programId: number;
+  onHidden?: () => void;
+}) {
   const [confirming, setConfirming] = useState(false);
   const [reason, setReason] = useState("");
   const router = useRouter();
@@ -18,7 +24,11 @@ export function HideButton({ programId }: { programId: number }) {
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ["programs"] });
       void qc.invalidateQueries({ queryKey: ["blacklist"] });
-      router.replace("/");
+      if (onHidden) {
+        onHidden();
+      } else {
+        router.replace("/");
+      }
     },
   });
 

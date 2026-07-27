@@ -27,9 +27,11 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 export function ProgramDetailBody({
   program,
   categoryLabels,
+  onHidden,
 }: {
   program: Program;
   categoryLabels: Record<string, string>;
+  onHidden?: () => void;
 }) {
   const { tone, label } = deadlineTone(program.application_end_at);
 
@@ -175,7 +177,7 @@ export function ProgramDetailBody({
       )}
 
       <section className="flex justify-end border-t border-gray-100 pt-4 dark:border-gray-800">
-        <HideButton programId={program.id} />
+        <HideButton programId={program.id} onHidden={onHidden} />
       </section>
     </div>
   );
