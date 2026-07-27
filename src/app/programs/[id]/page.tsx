@@ -164,7 +164,7 @@ export default async function ProgramDetailPage({ params }: { params: Params }) 
           <Row label="내용요약">
             <p className="leading-relaxed whitespace-pre-wrap">{program.summary}</p>
           </Row>
-          <Row label="지원조건">
+          <Row label="지원자격">
             <p className="leading-relaxed whitespace-pre-wrap">{program.support_condition}</p>
           </Row>
           {program.relevance && <Row label="분류 근거">{program.relevance}</Row>}
