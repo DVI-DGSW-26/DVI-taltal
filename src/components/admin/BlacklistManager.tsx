@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EyeOff, Loader2, Undo2 } from "lucide-react";
 import { adminApi } from "@/lib/admin";
@@ -9,12 +8,11 @@ import { queryKeys } from "@/lib/query";
 import { formatDateTime } from "@/lib/format";
 
 export function BlacklistManager() {
-  const [includeExpired, setIncludeExpired] = useState(false);
   const qc = useQueryClient();
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: queryKeys.blacklist(includeExpired),
-    queryFn: () => adminApi.blacklist(includeExpired),
+    queryKey: queryKeys.blacklist(false),
+    queryFn: () => adminApi.blacklist(false),
   });
 
   const unhide = useMutation({
@@ -27,20 +25,10 @@ export function BlacklistManager() {
 
   return (
     <section className="space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="flex items-center gap-2 text-base font-semibold">
-          <EyeOff size={18} aria-hidden className="text-gray-400" />
-          숨긴 공고
-        </h2>
-        <label className="inline-flex items-center gap-1.5 text-sm text-gray-500">
-          <input
-            type="checkbox"
-            checked={includeExpired}
-            onChange={(e) => setIncludeExpired(e.target.checked)}
-          />
-          만료 포함
-        </label>
-      </div>
+      <h2 className="flex items-center gap-2 text-base font-semibold">
+        <EyeOff size={18} aria-hidden className="text-gray-400" />
+        숨긴 공고
+      </h2>
 
       {isError && <p className="text-sm text-red-600">{errorMessage(error)}</p>}
 
