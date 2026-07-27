@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useProgramQueryState } from "@/lib/hooks";
 
 const WINDOW = 10;
@@ -25,6 +25,15 @@ export function Pagination({ page, pages, total }: { page: number; pages: number
 
   return (
     <nav aria-label="페이지" className="flex flex-wrap items-center justify-center gap-1 pt-2">
+      <button
+        type="button"
+        onClick={() => go(1)}
+        disabled={page <= 1}
+        aria-label="첫 페이지로"
+        className="inline-flex h-9 items-center rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
+      >
+        <ChevronsLeft size={18} aria-hidden />
+      </button>
       <button
         type="button"
         onClick={() => go(page - 1)}
@@ -59,6 +68,15 @@ export function Pagination({ page, pages, total }: { page: number; pages: number
       >
         <span className="hidden sm:inline">다음</span>
         <ChevronRight size={18} aria-hidden />
+      </button>
+      <button
+        type="button"
+        onClick={() => go(pages)}
+        disabled={page >= pages}
+        aria-label="마지막 페이지로"
+        className="inline-flex h-9 items-center rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
+      >
+        <ChevronsRight size={18} aria-hidden />
       </button>
 
       <span className="ml-2 hidden text-sm text-gray-500 sm:inline">
