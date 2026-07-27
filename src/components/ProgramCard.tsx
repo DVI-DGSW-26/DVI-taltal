@@ -51,7 +51,6 @@ export function ProgramCard({
       <h3 className="mt-2 text-base leading-snug font-semibold">
         <Link
           href={`/programs/${program.id}`}
-          prefetch
           className="hover:text-brand-600 line-clamp-2 after:absolute after:inset-0"
         >
           {program.title}

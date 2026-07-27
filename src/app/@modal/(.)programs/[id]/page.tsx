@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { DetailModal } from "@/components/DetailModal";
 import { ProgramDetailBody } from "@/components/ProgramDetailBody";
 import { loadProgram, loadProgramDetail } from "@/lib/loadProgram";
 
@@ -19,21 +18,13 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   }
 }
 
-export default async function ProgramDetailPage({ params }: { params: Params }) {
+export default async function ProgramDetailModalPage({ params }: { params: Params }) {
   const { id } = await params;
   const { program, categoryLabels } = await loadProgramDetail(id);
 
   return (
-    <article className="mx-auto max-w-4xl space-y-6">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
-      >
-        <ArrowLeft size={18} aria-hidden />
-        목록으로
-      </Link>
-
+    <DetailModal>
       <ProgramDetailBody program={program} categoryLabels={categoryLabels} />
-    </article>
+    </DetailModal>
   );
 }
