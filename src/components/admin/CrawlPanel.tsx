@@ -36,7 +36,7 @@ export function CrawlPanel() {
           }`}
         >
           {running && <Loader2 size={12} aria-hidden className="animate-spin" />}
-          {running ? "수집 중" : "대기"}
+          {running ? "수집 중" : "수집 완료"}
         </span>
       </div>
 
