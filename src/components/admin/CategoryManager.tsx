@@ -243,7 +243,7 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
           onClick={() => toggleActive.mutate(!category.is_active)}
           className="rounded-md px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
         >
-          {category.is_active ? "비활성화" : "활성화"}
+          {category.is_active ? "사용중" : "미사용"}
         </button>
         <button
           type="button"
