@@ -165,9 +165,6 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
     return (
       <li ref={setNodeRef} style={style} className="space-y-2 px-4 py-3">
         <div className="flex flex-wrap items-center gap-2">
-          <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
-            {category.code}
-          </code>
           <input
             value={label}
             onChange={(e) => setLabel(e.target.value)}
@@ -222,9 +219,6 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
         </button>
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
-              {category.code}
-            </code>
             <span className="font-medium">{category.label}</span>
             {!category.is_active && (
               <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500 dark:bg-gray-800">
