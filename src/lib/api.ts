@@ -1,4 +1,4 @@
-import type { Category, CrawlStatus, Program, ProgramPage, ProgramQuery } from "@/lib/types";
+import type { Category, CrawlStatus, Program, ProgramPage, ProgramQuery, Source } from "@/lib/types";
 
 const CLIENT_BASE = (process.env.NEXT_PUBLIC_API_BASE ?? "/api").replace(/\/+$/, "");
 
@@ -93,6 +93,8 @@ export const clientApi = {
     fetchJson<Category[]>(apiUrl(`/categories?include_inactive=${includeInactive}`)),
 
   crawlStatus: (): Promise<CrawlStatus> => fetchJson<CrawlStatus>(apiUrl("/crawl/status")),
+
+  sources: (): Promise<Source[]> => fetchJson<Source[]>(apiUrl("/sources")),
 };
 
 export const serverApi = {

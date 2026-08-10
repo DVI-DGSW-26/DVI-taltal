@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { CrawlPanel } from "@/components/admin/CrawlPanel";
+import { SourcesPanel } from "@/components/admin/SourcesPanel";
 import { CategoryManager } from "@/components/admin/CategoryManager";
 import { BlacklistManager } from "@/components/admin/BlacklistManager";
 
@@ -26,6 +27,7 @@ export default function AdminPage() {
       </div>
 
       <CrawlPanel />
+      <SourcesPanel />
       <CategoryManager />
       <BlacklistManager />
     </div>

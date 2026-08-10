@@ -19,4 +19,5 @@ export const queryKeys = {
   categories: (includeInactive: boolean) => ["categories", includeInactive] as const,
   crawlStatus: () => ["crawl-status"] as const,
   blacklist: (includeExpired: boolean) => ["blacklist", includeExpired] as const,
+  sources: () => ["sources"] as const,
 };

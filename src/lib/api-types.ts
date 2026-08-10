@@ -109,6 +109,26 @@ export interface paths {
         patch: operations["update_favorite_programs__program_id__favorite_patch"];
         trace?: never;
     };
+    "/sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 수집 대상 사이트 현황
+         * @description 어느 사이트를 수집하는지, 사이트별로 몇 건을 언제 마지막으로 받았는지 보여준다.
+         */
+        get: operations["list_sources_sources_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/categories": {
         parameters: {
             query?: never;
@@ -338,6 +358,8 @@ export interface components {
              * @description 이 단어가 있으면 해당 카테고리로 분류
              */
             keywords?: string[];
+            /** @description 설정하면 이 신청기간 유형의 공고에 키워드 없이도 자동으로 붙는다 */
+            period_type?: components["schemas"]["PeriodType"] | null;
             /**
              * Sort Order
              * @default 100
@@ -352,6 +374,7 @@ export interface components {
             label: string;
             /** Keywords */
             keywords: string[];
+            period_type: components["schemas"]["PeriodType"] | null;
             /** Sort Order */
             sort_order: number;
             /** Is Active */
@@ -363,6 +386,7 @@ export interface components {
             label?: string | null;
             /** Keywords */
             keywords?: string[] | null;
+            period_type?: components["schemas"]["PeriodType"] | null;
             /** Sort Order */
             sort_order?: number | null;
             /** Is Active */
@@ -459,6 +483,22 @@ export interface components {
          * @enum {string}
          */
         Region: "SEOUL" | "BUSAN" | "DAEGU" | "INCHEON" | "GWANGJU" | "DAEJEON" | "ULSAN" | "SEJONG" | "GYEONGGI" | "GANGWON" | "CHUNGBUK" | "CHUNGNAM" | "JEONBUK" | "JEONNAM" | "GYEONGBUK" | "GYEONGNAM" | "JEJU" | "NATIONWIDE" | "ETC";
+        /**
+         * SourceResponse
+         * @description 수집 대상 사이트 하나의 현황(/sources).
+         */
+        SourceResponse: {
+            /** Name */
+            name: string;
+            /** Url */
+            url: string;
+            /** Method */
+            method: string;
+            /** Program Count */
+            program_count: number;
+            /** Last Crawled At */
+            last_crawled_at: string | null;
+        };
         /** SuggestionResponse */
         SuggestionResponse: {
             /** Text */
@@ -701,6 +741,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_sources_sources_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SourceResponse"][];
                 };
             };
         };

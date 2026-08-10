@@ -55,3 +55,11 @@ export function useCrawlStatus() {
     refetchOnWindowFocus: true,
   });
 }
+
+export function useSources() {
+  return useQuery({
+    queryKey: queryKeys.sources(),
+    queryFn: () => clientApi.sources(),
+    staleTime: 60_000,
+  });
+}
