@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Building2, CalendarClock, Coins } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import { CardHideButton } from "@/components/CardHideButton";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { periodLabel, regionLabel } from "@/lib/labels";
 import { deadlineTone, formatAmount, formatPeriod } from "@/lib/format";
@@ -45,7 +46,8 @@ export function ProgramCard({
             </Badge>
           ))}
         </div>
-        <div className="relative z-10 -mt-1 -mr-1 shrink-0">
+        <div className="relative z-10 -mt-1 -mr-1 flex shrink-0 items-center gap-0.5">
+          <CardHideButton programId={program.id} />
           <FavoriteButton programId={program.id} isFavorite={program.is_favorite} />
         </div>
       </div>

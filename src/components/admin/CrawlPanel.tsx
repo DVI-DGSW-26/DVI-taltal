@@ -36,7 +36,7 @@ export function CrawlPanel() {
           }`}
         >
           {running && <Loader2 size={12} aria-hidden className="animate-spin" />}
-          {running ? "수집 중" : "대기"}
+          {running ? "수집 중" : "수집 완료"}
         </span>
       </div>
 
@@ -93,9 +93,6 @@ export function CrawlPanel() {
           </span>
         )}
       </div>
-      <p className="text-xs text-gray-400">
-        관리자 키는 서버(Route Handler)에서만 주입됩니다. 키 미설정 시 503이 반환됩니다.
-      </p>
     </section>
   );
 }

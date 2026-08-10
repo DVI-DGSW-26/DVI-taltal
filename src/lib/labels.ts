@@ -58,6 +58,13 @@ export const CATEGORY_SEED_LABEL: Record<string, string> = {
   ETC: "기타",
 };
 
+export const SOURCE_METHOD_LABEL: Record<string, string> = {
+  SITE_CRAWL: "사이트 크롤링",
+  OPEN_API: "공공 API",
+};
+
+export const sourceMethodLabel = (method: string): string => SOURCE_METHOD_LABEL[method] ?? method;
+
 export function categoryLabelMap(categories: Category[] | undefined): Record<string, string> {
   const map: Record<string, string> = { ...CATEGORY_SEED_LABEL };
   for (const c of categories ?? []) map[c.code] = c.label;

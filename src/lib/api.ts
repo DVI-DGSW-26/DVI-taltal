@@ -1,4 +1,4 @@
-import type { Category, CrawlStatus, Program, ProgramPage, ProgramQuery } from "@/lib/types";
+import type { Category, CrawlStatus, Program, ProgramPage, ProgramQuery, Source } from "@/lib/types";
 
 const CLIENT_BASE = (process.env.NEXT_PUBLIC_API_BASE ?? "/api").replace(/\/+$/, "");
 
@@ -66,6 +66,7 @@ export function buildProgramParams(query: Partial<ProgramQuery>): URLSearchParam
   for (const r of query.regions ?? []) params.append("regions", r);
   if (query.period_start) params.set("period_start", query.period_start);
   if (query.period_end) params.set("period_end", query.period_end);
+  for (const pt of query.period_types ?? []) params.append("period_types", pt);
   if (typeof query.favorite === "boolean") params.set("favorite", String(query.favorite));
   params.set("page", String(query.page ?? 1));
   params.set("size", String(query.size ?? 21));
@@ -93,6 +94,8 @@ export const clientApi = {
     fetchJson<Category[]>(apiUrl(`/categories?include_inactive=${includeInactive}`)),
 
   crawlStatus: (): Promise<CrawlStatus> => fetchJson<CrawlStatus>(apiUrl("/crawl/status")),
+
+  sources: (): Promise<Source[]> => fetchJson<Source[]>(apiUrl("/sources")),
 };
 
 export const serverApi = {

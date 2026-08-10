@@ -13,6 +13,7 @@ export type Category = Schemas["CategoryResponse"];
 export type CategoryCreate = Schemas["CategoryCreate"];
 export type CategoryUpdate = Schemas["CategoryUpdate"];
 export type BlacklistEntry = Schemas["BlacklistEntryResponse"];
+export type Source = Schemas["SourceResponse"];
 
 export interface CrawlStatus {
   running: boolean;
@@ -36,6 +37,7 @@ export interface ProgramQuery {
   regions: string[];
   period_start?: string;
   period_end?: string;
+  period_types: PeriodType[];
   favorite?: boolean;
   similar: boolean;
   page: number;
