@@ -26,13 +26,14 @@ export function SourcesPanel() {
           {sources.map((s) => (
             <li key={s.name} className="flex items-center justify-between gap-3 px-4 py-3">
               <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{s.name}</p>
                 <a
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-brand-600 truncate text-sm font-medium"
+                  className="hover:text-brand-600 block truncate text-xs text-gray-500 dark:text-gray-400"
                 >
-                  {s.name}
+                  {s.url}
                 </a>
                 <p className="mt-0.5 text-xs text-gray-400">
                   {sourceMethodLabel(s.method)} · 마지막 수집 {formatDateTime(s.last_crawled_at) || "—"}
