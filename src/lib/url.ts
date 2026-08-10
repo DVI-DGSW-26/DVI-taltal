@@ -1,6 +1,8 @@
-import type { ProgramQuery } from "@/lib/types";
+import type { PeriodType, ProgramQuery } from "@/lib/types";
 
 export const DEFAULT_SIZE = 21;
+
+const VALID_PERIOD_TYPES: PeriodType[] = ["FIXED", "ROLLING", "UNTIL_BUDGET", "UNKNOWN"];
 
 type RawSearchParams = Record<string, string | string[] | undefined>;
 
@@ -24,6 +26,9 @@ export function parseProgramQuery(sp: RawSearchParams): ProgramQuery {
     regions: asArray(sp.regions),
     period_start: first(sp.period_start) || undefined,
     period_end: first(sp.period_end) || undefined,
+    period_types: asArray(sp.period_types).filter((v): v is PeriodType =>
+      VALID_PERIOD_TYPES.includes(v as PeriodType),
+    ),
     favorite: favRaw === "true" ? true : favRaw === "false" ? false : undefined,
     similar: first(sp.similar) === "true",
     page: Number.isFinite(pageNum) && pageNum >= 1 ? Math.floor(pageNum) : 1,
@@ -41,6 +46,7 @@ export function programQueryToParams(q: ProgramQuery): URLSearchParams {
   for (const r of q.regions) p.append("regions", r);
   if (q.period_start) p.set("period_start", q.period_start);
   if (q.period_end) p.set("period_end", q.period_end);
+  for (const pt of q.period_types) p.append("period_types", pt);
   if (typeof q.favorite === "boolean") p.set("favorite", String(q.favorite));
   if (q.similar) p.set("similar", "true");
   if (q.page > 1) p.set("page", String(q.page));

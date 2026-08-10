@@ -3,7 +3,10 @@
 import { useMemo, useState } from "react";
 import { Heart, RotateCcw } from "lucide-react";
 import { useCategories, useProgramQueryState } from "@/lib/hooks";
-import { REGION_ORDER, categoryLabelMap, regionLabel } from "@/lib/labels";
+import { REGION_ORDER, categoryLabelMap, periodLabel, regionLabel } from "@/lib/labels";
+import type { PeriodType } from "@/lib/types";
+
+const NO_DEADLINE_PERIOD_TYPES: PeriodType[] = ["ROLLING", "UNTIL_BUDGET", "UNKNOWN"];
 
 function toggle(list: string[], value: string): string[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
@@ -56,6 +59,7 @@ export function Filters() {
 
   const [optimisticRegions, setOptimisticRegions] = useState<string[] | null>(null);
   const [optimisticCategories, setOptimisticCategories] = useState<string[] | null>(null);
+  const [optimisticPeriodTypes, setOptimisticPeriodTypes] = useState<PeriodType[] | null>(null);
   const [optimisticFavorite, setOptimisticFavorite] = useState<{ value: boolean | undefined } | null>(
     null,
   );
@@ -66,12 +70,16 @@ export function Filters() {
   if (optimisticCategories !== null && sameSet(optimisticCategories, query.categories)) {
     setOptimisticCategories(null);
   }
+  if (optimisticPeriodTypes !== null && sameSet(optimisticPeriodTypes, query.period_types)) {
+    setOptimisticPeriodTypes(null);
+  }
   if (optimisticFavorite !== null && optimisticFavorite.value === query.favorite) {
     setOptimisticFavorite(null);
   }
 
   const activeRegions = optimisticRegions ?? query.regions;
   const activeCategories = optimisticCategories ?? query.categories;
+  const activePeriodTypes = optimisticPeriodTypes ?? query.period_types;
   const activeFavorite = optimisticFavorite ? optimisticFavorite.value : query.favorite;
 
   const categoryOptions = useMemo(() => {
@@ -88,6 +96,7 @@ export function Filters() {
     query.regions.length > 0 ||
     query.period_start ||
     query.period_end ||
+    query.period_types.length > 0 ||
     typeof query.favorite === "boolean" ||
     query.similar;
 
@@ -150,6 +159,23 @@ export function Filters() {
             className="rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900"
           />
         </div>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {NO_DEADLINE_PERIOD_TYPES.map((pt) => (
+            <Chip
+              key={pt}
+              active={activePeriodTypes.includes(pt)}
+              onClick={() => {
+                const next = activePeriodTypes.includes(pt)
+                  ? activePeriodTypes.filter((v) => v !== pt)
+                  : [...activePeriodTypes, pt];
+                setOptimisticPeriodTypes(next);
+                patch({ period_types: next });
+              }}
+            >
+              {periodLabel(pt)}
+            </Chip>
+          ))}
+        </div>
       </section>
 
       <section className="flex items-center justify-between">
@@ -180,6 +206,7 @@ export function Filters() {
             onClick={() => {
               setOptimisticRegions([]);
               setOptimisticCategories([]);
+              setOptimisticPeriodTypes([]);
               setOptimisticFavorite({ value: undefined });
               push({
                 q: "",
@@ -187,6 +214,7 @@ export function Filters() {
                 regions: [],
                 period_start: undefined,
                 period_end: undefined,
+                period_types: [],
                 favorite: undefined,
                 similar: false,
                 page: 1,

@@ -34,7 +34,6 @@ import {
 import { adminApi } from "@/lib/admin";
 import { errorMessage } from "@/lib/api";
 import { useCategories } from "@/lib/hooks";
-import { periodLabel } from "@/lib/labels";
 import type { Category } from "@/lib/types";
 
 const createSchema = z.object({
@@ -230,11 +229,6 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
             {!category.is_active && (
               <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500 dark:bg-gray-800">
                 비활성
-              </span>
-            )}
-            {category.period_type && (
-              <span className="bg-brand-100 text-brand-700 dark:bg-brand-700/30 dark:text-brand-100 rounded px-1.5 py-0.5 text-xs">
-                신청기간: {periodLabel(category.period_type)}
               </span>
             )}
           </div>

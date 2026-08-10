@@ -358,8 +358,6 @@ export interface components {
              * @description 이 단어가 있으면 해당 카테고리로 분류
              */
             keywords?: string[];
-            /** @description 설정하면 이 신청기간 유형의 공고에 키워드 없이도 자동으로 붙는다 */
-            period_type?: components["schemas"]["PeriodType"] | null;
             /**
              * Sort Order
              * @default 100
@@ -374,7 +372,6 @@ export interface components {
             label: string;
             /** Keywords */
             keywords: string[];
-            period_type: components["schemas"]["PeriodType"] | null;
             /** Sort Order */
             sort_order: number;
             /** Is Active */
@@ -386,7 +383,6 @@ export interface components {
             label?: string | null;
             /** Keywords */
             keywords?: string[] | null;
-            period_type?: components["schemas"]["PeriodType"] | null;
             /** Sort Order */
             sort_order?: number | null;
             /** Is Active */
@@ -576,6 +572,8 @@ export interface operations {
                 regions?: components["schemas"]["Region"][];
                 period_start?: string | null;
                 period_end?: string | null;
+                /** @description 신청기간 유형(다중 가능). 마감일 없는 공고(ROLLING·UNTIL_BUDGET·UNKNOWN)만 따로 볼 때 쓴다. period_start/period_end 와 별개 조건으로 같이 걸린다(AND) */
+                period_types?: components["schemas"]["PeriodType"][];
                 favorite?: boolean | null;
                 page?: number;
                 size?: number;
@@ -616,6 +614,7 @@ export interface operations {
                 regions?: components["schemas"]["Region"][];
                 period_start?: string | null;
                 period_end?: string | null;
+                period_types?: components["schemas"]["PeriodType"][];
                 favorite?: boolean | null;
                 page?: number;
                 size?: number;

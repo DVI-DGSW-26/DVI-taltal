@@ -37,6 +37,7 @@ export interface ProgramQuery {
   regions: string[];
   period_start?: string;
   period_end?: string;
+  period_types: PeriodType[];
   favorite?: boolean;
   similar: boolean;
   page: number;
