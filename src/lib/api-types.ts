@@ -55,6 +55,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/programs/suggest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 검색어 자동완성
+         * @description 검색창에 넣을 후보를 돌려준다(유사어 → 기관명 → 공고 제목 순).
+         */
+        get: operations["suggest_search_terms_programs_suggest_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/programs/{program_id}": {
         parameters: {
             query?: never;
@@ -101,7 +121,9 @@ export interface paths {
         put?: never;
         /**
          * 카테고리 추가
-         * @description 카테고리를 추가한다. 기존 공고에도 반영하려면 /categories/reclassify 를 호출한다.
+         * @description 카테고리를 추가한다.
+         *
+         *     코드를 안 보내면 라벨에서 만든다. 기존 공고에도 반영하려면 /categories/reclassify 를 호출한다.
          */
         post: operations["create_category_categories_post"];
         delete?: never;
@@ -261,12 +283,22 @@ export interface components {
             /** Size Bytes */
             size_bytes: number | null;
             status: components["schemas"]["AttachmentStatus"];
+            /** Tables */
+            tables?: components["schemas"]["AttachmentTableResponse"][];
         };
         /**
          * AttachmentStatus
          * @enum {string}
          */
         AttachmentStatus: "SAVED" | "ANALYZED" | "UNSUPPORTED" | "FAILED";
+        /** AttachmentTableResponse */
+        AttachmentTableResponse: {
+            section: components["schemas"]["TableSection"];
+            /** Caption */
+            caption: string | null;
+            /** Rows */
+            rows: string[][];
+        };
         /** BlacklistEntryResponse */
         BlacklistEntryResponse: {
             /** Id */
@@ -295,12 +327,12 @@ export interface components {
         /** CategoryCreate */
         CategoryCreate: {
             /**
-             * Code
-             * @description 영문 대문자·숫자·밑줄
+             * Label
+             * @description 화면에 보이는 이름
              */
-            code: string;
-            /** Label */
             label: string;
+            /** Code */
+            code?: string | null;
             /**
              * Keywords
              * @description 이 단어가 있으면 해당 카테고리로 분류
@@ -396,6 +428,8 @@ export interface components {
             company_burden_text: string | null;
             /** Company Burden Rate */
             company_burden_rate: number | null;
+            /** Company Burden Rate Min */
+            company_burden_rate_min: number | null;
             /** Summary */
             summary: string;
             /** Support Condition */
@@ -425,6 +459,33 @@ export interface components {
          * @enum {string}
          */
         Region: "SEOUL" | "BUSAN" | "DAEGU" | "INCHEON" | "GWANGJU" | "DAEJEON" | "ULSAN" | "SEJONG" | "GYEONGGI" | "GANGWON" | "CHUNGBUK" | "CHUNGNAM" | "JEONBUK" | "JEONNAM" | "GYEONGBUK" | "GYEONGNAM" | "JEJU" | "NATIONWIDE" | "ETC";
+        /** SuggestionResponse */
+        SuggestionResponse: {
+            /** Text */
+            text: string;
+            type: components["schemas"]["SuggestionType"];
+            /** Count */
+            count?: number | null;
+        };
+        /**
+         * SuggestionType
+         * @description 자동완성 항목의 출처.
+         * @enum {string}
+         */
+        SuggestionType: "KEYWORD" | "ORGANIZATION" | "PROGRAM";
+        /**
+         * TableSection
+         * @description 표를 화면의 어느 항목 아래에 그릴지. 공고 상세의 섹션 이름과 짝이 맞는다.
+         *
+         *     어느 항목에도 걸리지 않는 표(신청서 양식의 빈칸 서식 등)는 아예 저장하지 않으므로
+         *     이 enum 에 '없음' 값은 두지 않는다.
+         *
+         *     내용요약과 지원금에는 표를 붙이지 않는다. 둘 다 한눈에 값을 읽는 자리라
+         *     표를 밀어 넣으면 정작 봐야 할 요약문·금액이 밀려나고 읽을 것만 늘어난다.
+         *     표는 조건이 여러 줄로 갈리는 항목(지원조건·기업부담금)에만 붙인다.
+         * @enum {string}
+         */
+        TableSection: "CONDITION" | "BURDEN";
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -532,6 +593,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProgramPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    suggest_search_terms_programs_suggest_get: {
+        parameters: {
+            query: {
+                /** @description 입력 중인 검색어 */
+                q: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuggestionResponse"][];
                 };
             };
             /** @description Validation Error */

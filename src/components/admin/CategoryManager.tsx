@@ -5,17 +5,40 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Check, Loader2, Pencil, Plus, RefreshCcw, Tags, Trash2, X } from "lucide-react";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
+  Check,
+  GripVertical,
+  Loader2,
+  Pencil,
+  Plus,
+  RefreshCcw,
+  Tags,
+  Trash2,
+  X,
+} from "lucide-react";
 import { adminApi } from "@/lib/admin";
 import { errorMessage } from "@/lib/api";
 import { useCategories } from "@/lib/hooks";
 import type { Category } from "@/lib/types";
 
 const createSchema = z.object({
-  code: z.string().regex(/^[A-Z0-9_]{2,50}$/, "영문 대문자·숫자·밑줄 2~50자"),
-  label: z.string().min(1, "라벨을 입력하세요").max(100),
+  label: z.string().min(1, "이름을 입력하세요").max(100),
   keywords: z.string().optional(),
-  sort_order: z.string().optional(),
 });
 
 type CreateForm = z.input<typeof createSchema>;
@@ -43,20 +66,19 @@ function AddCategoryForm() {
     formState: { errors },
   } = useForm<CreateForm>({
     resolver: zodResolver(createSchema),
-    defaultValues: { code: "", label: "", keywords: "", sort_order: "100" },
+    defaultValues: { label: "", keywords: "" },
   });
 
   const mutation = useMutation({
     mutationFn: (values: CreateForm) =>
       adminApi.createCategory({
-        code: values.code,
         label: values.label,
         keywords: splitKeywords(values.keywords),
-        sort_order: values.sort_order ? Number(values.sort_order) : 100,
+        sort_order: 100,
       }),
     onSuccess: () => {
       invalidate();
-      reset({ code: "", label: "", keywords: "", sort_order: "100" });
+      reset({ label: "", keywords: "" });
     },
   });
 
@@ -67,16 +89,7 @@ function AddCategoryForm() {
     >
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <label className="space-y-1 text-sm">
-          <span className="font-medium text-gray-600 dark:text-gray-300">코드</span>
-          <input
-            {...register("code")}
-            placeholder="EXPORT"
-            className="w-full rounded-md border border-gray-300 px-2.5 py-1.5 uppercase dark:border-gray-700 dark:bg-gray-900"
-          />
-          {errors.code && <span className="text-xs text-red-600">{errors.code.message}</span>}
-        </label>
-        <label className="space-y-1 text-sm">
-          <span className="font-medium text-gray-600 dark:text-gray-300">라벨</span>
+          <span className="font-medium text-gray-600 dark:text-gray-300">이름</span>
           <input
             {...register("label")}
             placeholder="수출"
@@ -84,21 +97,11 @@ function AddCategoryForm() {
           />
           {errors.label && <span className="text-xs text-red-600">{errors.label.message}</span>}
         </label>
-      </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_120px]">
         <label className="space-y-1 text-sm">
           <span className="font-medium text-gray-600 dark:text-gray-300">키워드 (쉼표로 구분)</span>
           <input
             {...register("keywords")}
             placeholder="수출, 해외진출, 무역"
-            className="w-full rounded-md border border-gray-300 px-2.5 py-1.5 dark:border-gray-700 dark:bg-gray-900"
-          />
-        </label>
-        <label className="space-y-1 text-sm">
-          <span className="font-medium text-gray-600 dark:text-gray-300">정렬순서</span>
-          <input
-            type="number"
-            {...register("sort_order")}
             className="w-full rounded-md border border-gray-300 px-2.5 py-1.5 dark:border-gray-700 dark:bg-gray-900"
           />
         </label>
@@ -120,20 +123,27 @@ function AddCategoryForm() {
   );
 }
 
-function CategoryRow({ category }: { category: Category }) {
+function CategoryRow({ category, dragging }: { category: Category; dragging?: boolean }) {
   const invalidate = useInvalidateCategories();
   const [editing, setEditing] = useState(false);
   const [label, setLabel] = useState(category.label);
   const [keywords, setKeywords] = useState(category.keywords.join(", "));
-  const [sortOrder, setSortOrder] = useState(String(category.sort_order));
   const isEtc = category.code === "ETC";
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: category.code,
+  });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   const update = useMutation({
     mutationFn: () =>
       adminApi.updateCategory(category.code, {
         label,
         keywords: splitKeywords(keywords),
-        sort_order: Number(sortOrder),
       }),
     onSuccess: () => {
       invalidate();
@@ -153,7 +163,7 @@ function CategoryRow({ category }: { category: Category }) {
 
   if (editing) {
     return (
-      <li className="space-y-2 px-4 py-3">
+      <li ref={setNodeRef} style={style} className="space-y-2 px-4 py-3">
         <div className="flex flex-wrap items-center gap-2">
           <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
             {category.code}
@@ -162,12 +172,6 @@ function CategoryRow({ category }: { category: Category }) {
             value={label}
             onChange={(e) => setLabel(e.target.value)}
             className="rounded-md border border-gray-300 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-900"
-          />
-          <input
-            type="number"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="w-20 rounded-md border border-gray-300 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-900"
           />
         </div>
         <input
@@ -201,23 +205,37 @@ function CategoryRow({ category }: { category: Category }) {
   }
 
   return (
-    <li className="flex items-center justify-between gap-3 px-4 py-3">
-      <div className="min-w-0">
-        <div className="flex items-center gap-2">
-          <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
-            {category.code}
-          </code>
-          <span className="font-medium">{category.label}</span>
-          {!category.is_active && (
-            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500 dark:bg-gray-800">
-              비활성
-            </span>
+    <li
+      ref={setNodeRef}
+      style={style}
+      className={`flex items-center justify-between gap-3 bg-white px-4 py-3 dark:bg-gray-900 ${dragging ? "shadow-lg" : ""}`}
+    >
+      <div className="flex min-w-0 items-center gap-2">
+        <button
+          type="button"
+          {...attributes}
+          {...listeners}
+          aria-label="순서 변경(드래그)"
+          className="cursor-grab touch-none rounded p-1 text-gray-300 hover:bg-gray-100 hover:text-gray-500 active:cursor-grabbing dark:hover:bg-gray-800"
+        >
+          <GripVertical size={16} aria-hidden />
+        </button>
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <code className="rounded bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
+              {category.code}
+            </code>
+            <span className="font-medium">{category.label}</span>
+            {!category.is_active && (
+              <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500 dark:bg-gray-800">
+                비활성
+              </span>
+            )}
+          </div>
+          {category.keywords.length > 0 && (
+            <p className="mt-0.5 truncate text-xs text-gray-400">{category.keywords.join(", ")}</p>
           )}
-          <span className="text-xs text-gray-400">#{category.sort_order}</span>
         </div>
-        {category.keywords.length > 0 && (
-          <p className="mt-0.5 truncate text-xs text-gray-400">{category.keywords.join(", ")}</p>
-        )}
       </div>
       <div className="flex shrink-0 items-center gap-1">
         <button
@@ -252,6 +270,62 @@ function CategoryRow({ category }: { category: Category }) {
         )}
       </div>
     </li>
+  );
+}
+
+function CategoryList({ categories }: { categories: Category[] }) {
+  const qc = useQueryClient();
+  const [order, setOrder] = useState(categories.map((c) => c.code));
+  const [lastSeen, setLastSeen] = useState(categories.map((c) => c.code).join(","));
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const nowKey = categories.map((c) => c.code).join(",");
+  if (nowKey !== lastSeen) {
+    setLastSeen(nowKey);
+    setOrder(categories.map((c) => c.code));
+  }
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }));
+
+  const persistOrder = useMutation({
+    mutationFn: async (newOrder: string[]) => {
+      await Promise.all(
+        newOrder.map((code, i) => adminApi.updateCategory(code, { sort_order: (i + 1) * 10 })),
+      );
+    },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["categories"] });
+    },
+  });
+
+  const byCode = new Map(categories.map((c) => [c.code, c]));
+  const ordered = order.map((code) => byCode.get(code)).filter((c): c is Category => !!c);
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={(e) => setActiveId(String(e.active.id))}
+      onDragEnd={(e: DragEndEvent) => {
+        setActiveId(null);
+        const { active, over } = e;
+        if (!over || active.id === over.id) return;
+        const oldIndex = order.indexOf(String(active.id));
+        const newIndex = order.indexOf(String(over.id));
+        const next = arrayMove(order, oldIndex, newIndex);
+        setOrder(next);
+        persistOrder.mutate(next);
+      }}
+      onDragCancel={() => setActiveId(null)}
+    >
+      <SortableContext items={order} strategy={verticalListSortingStrategy}>
+        <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200 dark:divide-gray-800 dark:border-gray-800">
+          {ordered.map((c) => (
+            <CategoryRow key={c.code} category={c} dragging={activeId === c.code} />
+          ))}
+        </ul>
+      </SortableContext>
+    </DndContext>
   );
 }
 
@@ -298,13 +372,17 @@ export function CategoryManager() {
 
       <AddCategoryForm />
 
-      <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200 dark:divide-gray-800 dark:border-gray-800">
-        {isLoading && <li className="px-4 py-6 text-center text-sm text-gray-400">불러오는 중…</li>}
-        {categories?.map((c) => <CategoryRow key={c.code} category={c} />)}
-        {categories?.length === 0 && (
-          <li className="px-4 py-6 text-center text-sm text-gray-400">카테고리가 없습니다.</li>
-        )}
-      </ul>
+      {isLoading && (
+        <div className="rounded-lg border border-gray-200 px-4 py-6 text-center text-sm text-gray-400 dark:border-gray-800">
+          불러오는 중…
+        </div>
+      )}
+      {categories && categories.length > 0 && <CategoryList categories={categories} />}
+      {categories?.length === 0 && (
+        <div className="rounded-lg border border-gray-200 px-4 py-6 text-center text-sm text-gray-400 dark:border-gray-800">
+          카테고리가 없습니다.
+        </div>
+      )}
     </section>
   );
 }
