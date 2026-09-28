@@ -1,41 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2, LogIn } from "lucide-react";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { LogIn } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
-export default function LoginPage() {
-  const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      if (!res.ok) {
-        const b = (await res.json().catch(() => ({}))) as { detail?: string };
-        setError(b.detail ?? "로그인에 실패했습니다.");
-        setLoading(false);
-        return;
-      }
-      const from = new URLSearchParams(window.location.search).get("from") || "/";
-      router.replace(from);
-      router.refresh();
-    } catch {
-      setError("네트워크 오류가 발생했습니다.");
-      setLoading(false);
-    }
-  };
+/**
+ * 사내 통합 로그인(SSO) 입구.
+ *
+ * 아이디/비밀번호 폼은 없다 — DVI 계정 하나로 로그인한다.
+ * 오류가 없으면 버튼을 누를 필요도 없이 바로 통합 로그인으로 보낼 수
+ * 있지만, 로그인 실패가 무한 리다이렉트 루프로 보이지 않도록 사람이
+ * 누르는 버튼을 입구로 둔다.
+ */
+function LoginInner() {
+  const params = useSearchParams();
+  const error = params.get("error");
+  const from = params.get("from") || "/";
+  const loginHref = `/api/auth/login?next=${encodeURIComponent(from)}`;
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
@@ -45,53 +27,34 @@ export default function LoginPage() {
           <p className="text-sm text-gray-500">지원사업 검색 · 로그인</p>
         </div>
 
-        <form
-          onSubmit={submit}
-          className="space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900"
-        >
-          <label className="block space-y-1.5">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">아이디</span>
-            <input
-              type="text"
-              autoComplete="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoFocus
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none dark:border-gray-700 dark:bg-gray-950"
-            />
-          </label>
-
-          <label className="block space-y-1.5">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">비밀번호</span>
-            <input
-              type="password"
-              autoComplete="current-password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm outline-none dark:border-gray-700 dark:bg-gray-950"
-            />
-          </label>
-
+        <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
           {error && (
             <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/30 dark:text-red-300">
               {error}
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-brand-500 hover:bg-brand-600 inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors disabled:opacity-60"
+          <a
+            href={loginHref}
+            className="bg-brand-500 hover:bg-brand-600 inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors"
           >
-            {loading ? (
-              <Loader2 size={18} aria-hidden className="animate-spin" />
-            ) : (
-              <LogIn size={18} aria-hidden />
-            )}
-            로그인
-          </button>
-        </form>
+            <LogIn size={18} aria-hidden />
+            DVI 계정으로 로그인
+          </a>
+
+          <p className="text-center text-xs text-gray-400">
+            다른 사내 서비스와 같은 계정입니다. 로그인이 안 되면 관리팀에 문의해주세요.
+          </p>
+        </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginInner />
+    </Suspense>
   );
 }
