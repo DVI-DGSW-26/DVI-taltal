@@ -36,3 +36,5 @@ yarn-error.log*
 
 # internal docs
 API_SPEC.md
+.vercel
+.env*
