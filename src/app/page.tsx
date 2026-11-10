@@ -25,16 +25,15 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
   const query = parseProgramQuery(sp);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <CrawlBanner />
 
       <div>
-        <h1 className="sr-only">지원사업 검색</h1>
         <SearchBar />
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[300px_minmax(0,1fr)_300px]">
-        <aside className="lg:sticky lg:top-20 lg:self-start">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[300px_minmax(0,1fr)] 2xl:grid-cols-[300px_minmax(0,1fr)_300px]">
+        <aside className="lg:sticky lg:top-30 lg:self-start">
           <Filters />
         </aside>
 
@@ -44,7 +43,7 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
           </Suspense>
         </section>
 
-        <div aria-hidden className="hidden lg:block" />
+        <div aria-hidden className="hidden 2xl:block" />
       </div>
     </div>
   );

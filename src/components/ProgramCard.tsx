@@ -32,7 +32,7 @@ export function ProgramCard({
     periodLabel(program.application_period_type);
 
   return (
-    <li className="group relative rounded-xl border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
+    <li className="group border-edge bg-surface hover:border-line-strong relative rounded-xl border p-4 transition-colors">
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-wrap items-center gap-1.5">
           {program.regions.map((r) => (
@@ -52,7 +52,7 @@ export function ProgramCard({
         </div>
       </div>
 
-      <h3 className="mt-2 text-base leading-snug font-semibold">
+      <h3 className="text-fg mt-2 text-base leading-snug font-semibold">
         <Link
           href={`/programs/${program.id}`}
           onClick={(e) => {
@@ -60,26 +60,26 @@ export function ProgramCard({
             e.preventDefault();
             onOpen(program);
           }}
-          className="hover:text-brand-600 line-clamp-2 after:absolute after:inset-0"
+          className="hover:text-brand-fg line-clamp-2 after:absolute after:inset-0"
         >
           {program.title}
         </Link>
       </h3>
 
-      <dl className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-gray-600 dark:text-gray-400">
+      <dl className="text-fg-muted mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm">
         <div className="flex items-center gap-1.5">
-          <Building2 size={17} aria-hidden className="shrink-0 text-gray-400" />
+          <Building2 size={16} aria-hidden className="text-fg-subtle shrink-0" />
           <dt className="sr-only">기관</dt>
           <dd>{program.organization}</dd>
         </div>
         <div className="flex items-center gap-1.5">
-          <CalendarClock size={17} aria-hidden className="shrink-0 text-gray-400" />
+          <CalendarClock size={16} aria-hidden className="text-fg-subtle shrink-0" />
           <dt className="sr-only">신청기간</dt>
           <dd>{period}</dd>
         </div>
         {amount && (
           <div className="flex items-center gap-1.5">
-            <Coins size={17} aria-hidden className="shrink-0 text-gray-400" />
+            <Coins size={16} aria-hidden className="text-fg-subtle shrink-0" />
             <dt className="sr-only">지원금</dt>
             <dd>{amount}</dd>
           </div>

@@ -47,23 +47,23 @@ export function ProgramResults({
     );
   } else if (isError) {
     content = (
-      <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300">
+      <div className="border-danger-line bg-danger-soft text-danger-fg rounded-xl border p-6 text-center text-sm">
         목록을 불러오지 못했습니다: {errorMessage(error)}
       </div>
     );
   } else if ((data as ProgramPage).items.length === 0) {
     content = (
-      <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-gray-300 py-16 text-center dark:border-gray-700">
-        <SearchX size={32} aria-hidden className="text-gray-400" />
-        <p className="text-sm text-gray-500">조건에 맞는 지원사업이 없습니다.</p>
+      <div className="border-line-strong flex flex-col items-center gap-3 rounded-xl border border-dashed py-16 text-center">
+        <SearchX size={32} aria-hidden className="text-fg-subtle" />
+        <p className="text-fg-muted text-sm">조건에 맞는 지원사업이 없습니다.</p>
       </div>
     );
   } else {
     const page = data as ProgramPage;
     content = (
       <div className="space-y-4">
-        <p className="text-sm text-gray-500">
-          총 <b className="text-gray-900 dark:text-gray-100">{page.total.toLocaleString()}</b>건
+        <p className="text-fg-muted text-sm">
+          총 <b className="text-fg tabular-nums">{page.total.toLocaleString()}</b>건
         </p>
         <ul
           className={`grid grid-cols-1 gap-4 transition-opacity @[440px]:grid-cols-2 @[640px]:grid-cols-3 ${

@@ -22,7 +22,7 @@ export function CardHideButton({ programId, size = 20 }: { programId: number; si
       <div
         role="group"
         onClick={(e) => e.preventDefault()}
-        className="relative z-10 inline-flex items-center gap-0.5 rounded-md border border-amber-300 bg-amber-50 p-0.5 dark:border-amber-700/50 dark:bg-amber-950/40"
+        className="border-warn-line bg-warn-soft relative z-10 inline-flex items-center gap-0.5 rounded-md border p-0.5"
       >
         <button
           type="button"
@@ -34,12 +34,12 @@ export function CardHideButton({ programId, size = 20 }: { programId: number; si
             e.stopPropagation();
             mutation.mutate();
           }}
-          className="inline-flex items-center rounded p-1 text-red-600 hover:bg-red-100 disabled:opacity-50 dark:hover:bg-red-950/40"
+          className="text-danger-fg hover:bg-danger-soft disabled:text-fg-faint inline-flex items-center rounded-md p-1 disabled:cursor-not-allowed"
         >
           {mutation.isPending ? (
-            <Loader2 size={14} aria-hidden className="animate-spin" />
+            <Loader2 size={16} aria-hidden className="animate-spin" />
           ) : (
-            <Check size={14} aria-hidden />
+            <Check size={16} aria-hidden />
           )}
         </button>
         <button
@@ -52,9 +52,9 @@ export function CardHideButton({ programId, size = 20 }: { programId: number; si
             e.stopPropagation();
             setConfirming(false);
           }}
-          className="inline-flex items-center rounded p-1 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="text-fg-muted hover:bg-surface-2 hover:text-fg inline-flex items-center rounded-md p-1"
         >
-          <X size={14} aria-hidden />
+          <X size={16} aria-hidden />
         </button>
       </div>
     );
@@ -70,7 +70,7 @@ export function CardHideButton({ programId, size = 20 }: { programId: number; si
         e.stopPropagation();
         setConfirming(true);
       }}
-      className="relative z-10 inline-flex items-center gap-1.5 rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-800"
+      className="text-fg-muted hover:bg-surface-2 hover:text-fg relative z-10 inline-flex items-center gap-1.5 rounded-lg p-1.5 transition-colors"
     >
       <EyeOff size={size} aria-hidden />
     </button>

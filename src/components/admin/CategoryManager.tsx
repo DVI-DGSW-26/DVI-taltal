@@ -85,37 +85,37 @@ function AddCategoryForm() {
   return (
     <form
       onSubmit={handleSubmit((v) => mutation.mutate(v))}
-      className="space-y-3 rounded-lg border border-gray-200 p-4 dark:border-gray-800"
+      className="border-edge space-y-4 rounded-xl border p-5"
     >
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label className="space-y-1 text-sm">
-          <span className="font-medium text-gray-600 dark:text-gray-300">이름</span>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="text-fg-muted text-xs font-medium">이름</span>
           <input
             {...register("label")}
             placeholder="수출"
-            className="w-full rounded-md border border-gray-300 px-2.5 py-1.5 dark:border-gray-700 dark:bg-gray-900"
+            className="border-line-strong bg-surface text-fg placeholder:text-fg-subtle hover:border-fg-subtle h-10 w-full rounded-md border px-3 text-sm"
           />
-          {errors.label && <span className="text-xs text-red-600">{errors.label.message}</span>}
+          {errors.label && <span className="text-danger-fg text-xs">{errors.label.message}</span>}
         </label>
-        <label className="space-y-1 text-sm">
-          <span className="font-medium text-gray-600 dark:text-gray-300">키워드 (쉼표로 구분)</span>
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="text-fg-muted text-xs font-medium">키워드 (쉼표로 구분)</span>
           <input
             {...register("keywords")}
             placeholder="수출, 해외진출, 무역"
-            className="w-full rounded-md border border-gray-300 px-2.5 py-1.5 dark:border-gray-700 dark:bg-gray-900"
+            className="border-line-strong bg-surface text-fg placeholder:text-fg-subtle hover:border-fg-subtle h-10 w-full rounded-md border px-3 text-sm"
           />
         </label>
       </div>
-      {mutation.isError && <p className="text-sm text-red-600">{errorMessage(mutation.error)}</p>}
+      {mutation.isError && <p className="text-danger-fg text-sm">{errorMessage(mutation.error)}</p>}
       <button
         type="submit"
         disabled={mutation.isPending}
-        className="bg-brand-500 hover:bg-brand-600 inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+        className="bg-brand hover:bg-brand-hover text-on-brand disabled:bg-surface-3 disabled:text-fg-faint inline-flex h-10 items-center gap-1.5 rounded-md px-4 text-sm font-semibold disabled:cursor-not-allowed"
       >
         {mutation.isPending ? (
-          <Loader2 size={16} aria-hidden className="animate-spin" />
+          <Loader2 size={18} aria-hidden className="animate-spin" />
         ) : (
-          <Plus size={16} aria-hidden />
+          <Plus size={18} aria-hidden />
         )}
         카테고리 추가
       </button>
@@ -168,32 +168,32 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
           <input
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            className="rounded-md border border-gray-300 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-900"
+            className="border-line-strong bg-surface text-fg placeholder:text-fg-subtle hover:border-fg-subtle h-10 rounded-md border px-3 text-sm"
           />
         </div>
         <input
           value={keywords}
           onChange={(e) => setKeywords(e.target.value)}
           placeholder="키워드 (쉼표 구분)"
-          className="w-full rounded-md border border-gray-300 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-900"
+          className="border-line-strong bg-surface text-fg placeholder:text-fg-subtle hover:border-fg-subtle h-10 w-full rounded-md border px-3 text-sm"
         />
-        {update.isError && <p className="text-xs text-red-600">{errorMessage(update.error)}</p>}
+        {update.isError && <p className="text-danger-fg text-xs">{errorMessage(update.error)}</p>}
         <div className="flex gap-2">
           <button
             type="button"
             onClick={() => update.mutate()}
             disabled={update.isPending}
-            className="bg-brand-500 hover:bg-brand-600 inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium text-white"
+            className="bg-brand hover:bg-brand-hover text-on-brand disabled:bg-surface-3 disabled:text-fg-faint inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-xs font-medium disabled:cursor-not-allowed"
           >
-            <Check size={13} aria-hidden />
+            <Check size={16} aria-hidden />
             저장
           </button>
           <button
             type="button"
             onClick={() => setEditing(false)}
-            className="inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="text-fg-muted hover:bg-surface-2 hover:text-fg inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-xs font-medium"
           >
-            <X size={13} aria-hidden />
+            <X size={16} aria-hidden />
             취소
           </button>
         </div>
@@ -205,7 +205,7 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
     <li
       ref={setNodeRef}
       style={style}
-      className={`flex items-center justify-between gap-3 bg-white px-4 py-3 dark:bg-gray-900 ${dragging ? "shadow-lg" : ""}`}
+      className={`bg-surface flex items-center justify-between gap-3 px-4 py-3 ${dragging ? "shadow-lg" : ""}`}
     >
       <div className="flex min-w-0 items-center gap-2">
         <button
@@ -213,21 +213,21 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
           {...attributes}
           {...listeners}
           aria-label="순서 변경(드래그)"
-          className="cursor-grab touch-none rounded p-1 text-gray-300 hover:bg-gray-100 hover:text-gray-500 active:cursor-grabbing dark:hover:bg-gray-800"
+          className="text-fg-faint hover:bg-surface-2 hover:text-fg-muted cursor-grab touch-none rounded-md p-1 active:cursor-grabbing"
         >
           <GripVertical size={16} aria-hidden />
         </button>
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="font-medium">{category.label}</span>
+            <span className="text-fg text-sm font-medium">{category.label}</span>
             {!category.is_active && (
-              <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500 dark:bg-gray-800">
+              <span className="border-line bg-surface-2 text-fg-muted inline-flex h-6 items-center rounded-full border px-2 text-xs font-medium">
                 비활성
               </span>
             )}
           </div>
           {category.keywords.length > 0 && (
-            <p className="mt-0.5 truncate text-xs text-gray-400">{category.keywords.join(", ")}</p>
+            <p className="text-fg-subtle mt-0.5 truncate text-xs">{category.keywords.join(", ")}</p>
           )}
         </div>
       </div>
@@ -235,7 +235,7 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
         <button
           type="button"
           onClick={() => toggleActive.mutate(!category.is_active)}
-          className="rounded-md px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="text-fg-muted hover:bg-surface-2 hover:text-fg inline-flex h-9 items-center gap-1.5 rounded-md px-3 text-xs font-medium"
         >
           {category.is_active ? "사용중" : "미사용"}
         </button>
@@ -243,9 +243,9 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
           type="button"
           onClick={() => setEditing(true)}
           aria-label="수정"
-          className="rounded-md p-1.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="text-fg-muted hover:bg-surface-2 hover:text-fg inline-flex h-9 w-9 items-center justify-center rounded-md"
         >
-          <Pencil size={15} aria-hidden />
+          <Pencil size={16} aria-hidden />
         </button>
         {!isEtc && (
           <button
@@ -257,9 +257,9 @@ function CategoryRow({ category, dragging }: { category: Category; dragging?: bo
                 remove.mutate();
             }}
             aria-label="삭제"
-            className="rounded-md p-1.5 text-gray-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30"
+            className="text-fg-muted hover:bg-danger-soft hover:text-danger-fg inline-flex h-9 w-9 items-center justify-center rounded-md"
           >
-            <Trash2 size={15} aria-hidden />
+            <Trash2 size={16} aria-hidden />
           </button>
         )}
       </div>
@@ -313,7 +313,7 @@ function CategoryList({ categories }: { categories: Category[] }) {
       onDragCancel={() => setActiveId(null)}
     >
       <SortableContext items={order} strategy={verticalListSortingStrategy}>
-        <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200 dark:divide-gray-800 dark:border-gray-800">
+        <ul className="divide-line border-edge divide-y overflow-hidden rounded-xl border">
           {ordered.map((c) => (
             <CategoryRow key={c.code} category={c} dragging={activeId === c.code} />
           ))}
@@ -335,10 +335,10 @@ export function CategoryManager() {
   });
 
   return (
-    <section className="space-y-4 rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900">
+    <section className="border-edge bg-surface space-y-4 rounded-xl border p-5">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="flex items-center gap-2 text-base font-semibold">
-          <Tags size={18} aria-hidden className="text-gray-400" />
+        <h2 className="text-fg flex items-center gap-2 text-base font-semibold">
+          <Tags size={20} aria-hidden className="text-fg-subtle" />
           카테고리 관리
         </h2>
         <button
@@ -346,34 +346,36 @@ export function CategoryManager() {
           onClick={() => reclassify.mutate()}
           disabled={reclassify.isPending}
           title="추가/수정한 카테고리를 기존 공고에도 반영"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-60 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+          className="border-line-strong bg-surface text-fg-muted hover:bg-surface-2 hover:text-fg disabled:bg-surface-3 disabled:text-fg-faint inline-flex h-10 items-center gap-1.5 rounded-md border px-4 text-sm font-semibold disabled:cursor-not-allowed disabled:border-transparent"
         >
           {reclassify.isPending ? (
-            <Loader2 size={15} aria-hidden className="animate-spin" />
+            <Loader2 size={16} aria-hidden className="animate-spin" />
           ) : (
-            <RefreshCcw size={15} aria-hidden />
+            <RefreshCcw size={16} aria-hidden />
           )}
           전체 재분류
         </button>
       </div>
 
       {reclassify.isSuccess && (
-        <p className="text-sm text-green-600">{reclassify.data.reclassified}건을 재분류했습니다.</p>
+        <p className="text-success-fg text-sm">
+          {reclassify.data.reclassified}건을 재분류했습니다.
+        </p>
       )}
       {reclassify.isError && (
-        <p className="text-sm text-red-600">{errorMessage(reclassify.error)}</p>
+        <p className="text-danger-fg text-sm">{errorMessage(reclassify.error)}</p>
       )}
 
       <AddCategoryForm />
 
       {isLoading && (
-        <div className="rounded-lg border border-gray-200 px-4 py-6 text-center text-sm text-gray-400 dark:border-gray-800">
+        <div className="border-edge text-fg-subtle rounded-xl border px-4 py-10 text-center text-sm">
           불러오는 중…
         </div>
       )}
       {categories && categories.length > 0 && <CategoryList categories={categories} />}
       {categories?.length === 0 && (
-        <div className="rounded-lg border border-gray-200 px-4 py-6 text-center text-sm text-gray-400 dark:border-gray-800">
+        <div className="border-edge text-fg-subtle rounded-xl border px-4 py-10 text-center text-sm">
           카테고리가 없습니다.
         </div>
       )}

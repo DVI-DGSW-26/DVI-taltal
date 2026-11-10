@@ -38,7 +38,7 @@ export function ThemeToggle() {
       onClick={toggle}
       aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
       title={isDark ? "라이트 모드" : "다크 모드"}
-      className="hover:text-brand-600 inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-lg transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
+      className="border-edge bg-surface text-fg-muted hover:bg-surface-2 hover:text-fg inline-flex h-10 w-10 items-center justify-center rounded-full border shadow-lg transition-colors"
     >
       {isDark ? <Sun size={20} aria-hidden /> : <Moon size={20} aria-hidden />}
     </button>

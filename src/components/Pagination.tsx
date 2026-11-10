@@ -39,17 +39,17 @@ export function Pagination({ page, pages, total }: { page: number; pages: number
         onClick={() => go(1)}
         disabled={activePage <= 1}
         aria-label="첫 페이지로"
-        className="inline-flex h-9 items-center rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
+        className="text-fg-muted hover:bg-surface-2 hover:text-fg disabled:text-fg-faint inline-flex h-9 items-center rounded-md px-2 text-sm disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
-        <ChevronsLeft size={18} aria-hidden />
+        <ChevronsLeft size={16} aria-hidden />
       </button>
       <button
         type="button"
         onClick={() => go(activePage - 1)}
         disabled={activePage <= 1}
-        className="inline-flex h-9 items-center gap-0.5 rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
+        className="text-fg-muted hover:bg-surface-2 hover:text-fg disabled:text-fg-faint inline-flex h-9 items-center gap-1 rounded-md px-3 text-sm font-medium disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
-        <ChevronLeft size={18} aria-hidden />
+        <ChevronLeft size={16} aria-hidden />
         <span className="hidden sm:inline">이전</span>
       </button>
 
@@ -59,10 +59,10 @@ export function Pagination({ page, pages, total }: { page: number; pages: number
           type="button"
           onClick={() => go(p)}
           aria-current={p === activePage ? "page" : undefined}
-          className={`h-9 min-w-9 rounded-lg px-2 text-sm ${
+          className={`h-9 min-w-9 rounded-md px-2 text-sm tabular-nums ${
             p === activePage
-              ? "bg-brand-500 font-semibold text-white"
-              : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+              ? "bg-brand-soft text-brand-fg font-semibold"
+              : "text-fg-muted hover:bg-surface-2 hover:text-fg"
           }`}
         >
           {p}
@@ -73,22 +73,22 @@ export function Pagination({ page, pages, total }: { page: number; pages: number
         type="button"
         onClick={() => go(activePage + 1)}
         disabled={activePage >= pages}
-        className="inline-flex h-9 items-center gap-0.5 rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
+        className="text-fg-muted hover:bg-surface-2 hover:text-fg disabled:text-fg-faint inline-flex h-9 items-center gap-1 rounded-md px-3 text-sm font-medium disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
         <span className="hidden sm:inline">다음</span>
-        <ChevronRight size={18} aria-hidden />
+        <ChevronRight size={16} aria-hidden />
       </button>
       <button
         type="button"
         onClick={() => go(pages)}
         disabled={activePage >= pages}
         aria-label="마지막 페이지로"
-        className="inline-flex h-9 items-center rounded-lg px-2 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-40 dark:text-gray-300 dark:hover:bg-gray-800"
+        className="text-fg-muted hover:bg-surface-2 hover:text-fg disabled:text-fg-faint inline-flex h-9 items-center rounded-md px-2 text-sm disabled:cursor-not-allowed disabled:hover:bg-transparent"
       >
-        <ChevronsRight size={18} aria-hidden />
+        <ChevronsRight size={16} aria-hidden />
       </button>
 
-      <span className="ml-2 hidden text-sm text-gray-500 sm:inline">
+      <span className="text-fg-muted ml-2 hidden text-sm tabular-nums sm:inline">
         총 {total.toLocaleString()}건
       </span>
     </nav>
