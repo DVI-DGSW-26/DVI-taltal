@@ -41,9 +41,9 @@ export function LogoutButton() {
         type="button"
         onClick={() => setConfirming(true)}
         disabled={loading}
-        className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 disabled:opacity-60 dark:text-gray-300 dark:hover:bg-gray-800"
+        className="text-fg-muted hover:bg-surface-2 hover:text-fg disabled:text-fg-faint inline-flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold disabled:cursor-not-allowed"
       >
-        <LogOut size={16} aria-hidden />
+        <LogOut size={18} aria-hidden />
         <span className="hidden sm:inline">로그아웃</span>
       </button>
 
@@ -52,7 +52,7 @@ export function LogoutButton() {
         createPortal(
           <div
             role="presentation"
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4"
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4 dark:bg-black/60"
             onClick={() => setConfirming(false)}
           >
             <div
@@ -60,19 +60,19 @@ export function LogoutButton() {
               aria-modal="true"
               aria-labelledby="logout-confirm-title"
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-sm rounded-xl border border-gray-200 bg-white p-5 shadow-xl dark:border-gray-800 dark:bg-gray-900"
+              className="border-edge bg-surface w-full max-w-[400px] rounded-2xl border p-6 shadow-xl"
             >
-              <h2 id="logout-confirm-title" className="text-base font-semibold">
+              <h2 id="logout-confirm-title" className="text-fg text-xl font-semibold">
                 로그아웃 하시겠습니까?
               </h2>
-              <p className="mt-1.5 text-sm text-gray-500">
+              <p className="text-fg-muted mt-2 text-sm">
                 다시 로그인해야 서비스를 이용할 수 있습니다.
               </p>
-              <div className="mt-5 flex justify-end gap-2">
+              <div className="mt-6 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setConfirming(false)}
-                  className="rounded-lg px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                  className="border-line-strong bg-surface text-fg-muted hover:bg-surface-2 hover:text-fg inline-flex h-10 items-center gap-1.5 rounded-md border px-4 text-sm font-semibold"
                 >
                   취소
                 </button>
@@ -80,7 +80,7 @@ export function LogoutButton() {
                   type="button"
                   onClick={logout}
                   disabled={loading}
-                  className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-60"
+                  className="bg-danger hover:bg-danger-hover disabled:bg-surface-3 disabled:text-fg-faint inline-flex h-10 items-center gap-1.5 rounded-md px-4 text-sm font-semibold text-white disabled:cursor-not-allowed"
                 >
                   로그아웃
                 </button>

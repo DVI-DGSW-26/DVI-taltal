@@ -8,7 +8,7 @@ import type { Program, ProgramPage } from "@/lib/types";
 export function FavoriteButton({
   programId,
   isFavorite,
-  size = 22,
+  size = 20,
   withLabel = false,
 }: {
   programId: number;
@@ -63,12 +63,14 @@ export function FavoriteButton({
         e.stopPropagation();
         mutation.mutate(!optimistic);
       }}
-      className="inline-flex items-center gap-1.5 rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-red-500 disabled:opacity-50 dark:hover:bg-gray-800"
+      className="text-fg-muted hover:bg-surface-2 hover:text-danger inline-flex items-center gap-1.5 rounded-lg p-1.5 transition-colors disabled:cursor-not-allowed"
       disabled={mutation.isPending}
     >
-      <Heart size={size} className={optimistic ? "fill-red-500 text-red-500" : ""} aria-hidden />
+      <Heart size={size} className={optimistic ? "fill-danger text-danger" : ""} aria-hidden />
       {withLabel && (
-        <span className="text-sm whitespace-nowrap">{optimistic ? "관심해제" : "관심등록"}</span>
+        <span className="text-sm font-medium whitespace-nowrap">
+          {optimistic ? "관심해제" : "관심등록"}
+        </span>
       )}
     </button>
   );

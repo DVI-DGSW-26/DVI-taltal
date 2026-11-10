@@ -24,25 +24,25 @@ function LoginInner() {
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3">
           <Logo height={140} />
-          <p className="text-sm text-gray-500">지원사업 검색 · 로그인</p>
+          <p className="text-fg-muted text-sm">지원사업 검색 · 로그인</p>
         </div>
 
-        <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+        <div className="border-edge bg-surface space-y-4 rounded-xl border p-6 shadow-sm">
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/30 dark:text-red-300">
+            <p className="border-danger-line bg-danger-soft text-danger-fg rounded-lg border px-3 py-2 text-sm">
               {error}
             </p>
           )}
 
           <a
             href={loginHref}
-            className="bg-brand-500 hover:bg-brand-600 inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors"
+            className="bg-brand hover:bg-brand-hover text-on-brand inline-flex h-12 w-full items-center justify-center gap-1.5 rounded-md px-4 text-base font-semibold transition-colors"
           >
             <LogIn size={18} aria-hidden />
             DVI 계정으로 로그인
           </a>
 
-          <p className="text-center text-xs text-gray-400">
+          <p className="text-fg-subtle text-center text-xs">
             다른 사내 서비스와 같은 계정입니다. 로그인이 안 되면 관리팀에 문의해주세요.
           </p>
         </div>

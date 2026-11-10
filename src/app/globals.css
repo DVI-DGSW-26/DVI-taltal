@@ -3,47 +3,114 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
-  --color-brand-50: oklch(0.97 0.02 255);
-  --color-brand-100: oklch(0.93 0.05 255);
-  --color-brand-200: oklch(0.87 0.08 256);
-  --color-brand-500: oklch(0.58 0.18 258);
-  --color-brand-600: oklch(0.51 0.19 258);
-  --color-brand-700: oklch(0.44 0.18 258);
-  --color-brand-800: oklch(0.37 0.15 258);
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+
+  --color-canvas: #f2f3f7;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4f5f7;
+  --color-surface-3: #e5e7eb;
+  --color-line: #eceef1;
+  --color-line-strong: #d1d5db;
+  --color-edge: #e6e8ec;
+  --color-fg: #1c1f26;
+  --color-fg-muted: #5f6673;
+  --color-fg-subtle: #8e95a1;
+  --color-fg-faint: #c4c8cf;
+
+  /* 서비스 메인 컬러 (탈탈 블루) */
+  --color-brand: #2a76e2;
+  --color-brand-hover: #005fd0;
+  --color-on-brand: #ffffff;
+  --color-brand-fg: #005fd0;
+  --color-brand-soft: color-mix(in srgb, var(--color-brand) 10%, #ffffff);
+  --color-brand-line: color-mix(in srgb, var(--color-brand) 30%, #ffffff);
+
+  --color-danger: #e5484d;
+  --color-danger-hover: #cc3a3f;
+  --color-danger-fg: #c42b30;
+  --color-danger-soft: #fdecec;
+  --color-danger-line: #f7c8ca;
+  --color-warn: #c0801f;
+  --color-warn-fg: #a3610b;
+  --color-warn-soft: #fdf3e1;
+  --color-warn-line: #ecd9bc;
+  --color-success: #23936c;
+  --color-success-fg: #137a55;
+  --color-success-soft: #e3f7ef;
+  --color-success-line: #bddfd3;
+  --color-info: #3b7fe0;
+  --color-info-fg: #1f5fc4;
+  --color-info-soft: #e8f1fe;
+  --color-info-line: #c4d9f6;
 }
 
 :root,
 :root[data-theme="light"] {
-  --background: #f8fafc;
-  --foreground: #0a0a0a;
   color-scheme: light;
 }
 
-:root[data-theme="dark"] {
-  --background: #0a0a0b;
-  --foreground: #ededed;
+[data-theme="dark"] {
   color-scheme: dark;
+  --color-canvas: #0a0c17;
+  --color-surface: #191f37;
+  --color-surface-2: #212844;
+  --color-surface-3: #2d3556;
+  --color-line: #2a3152;
+  --color-line-strong: #4a5480;
+  --color-edge: transparent;
+  --color-fg: #e7e9ee;
+  --color-fg-muted: #a6adc4;
+  --color-fg-subtle: #7b83a0;
+  --color-fg-faint: #4a5272;
+
+  --color-brand: #2a76e2;
+  --color-brand-hover: #4d8de8;
+  --color-on-brand: #ffffff;
+  --color-brand-fg: #7aacf6;
+  --color-brand-soft: color-mix(in srgb, var(--color-brand) 14%, transparent);
+  --color-brand-line: color-mix(in srgb, var(--color-brand) 40%, transparent);
+
+  --color-danger-hover: #ef6a6e;
+  --color-danger-fg: #ff8f8a;
+  --color-warn-fg: #f6c46e;
+  --color-success-fg: #5fddb2;
+  --color-info-fg: #93bdfb;
+  --color-danger-soft: color-mix(in srgb, var(--color-danger) 14%, transparent);
+  --color-warn-soft: color-mix(in srgb, var(--color-warn) 14%, transparent);
+  --color-success-soft: color-mix(in srgb, var(--color-success) 14%, transparent);
+  --color-info-soft: color-mix(in srgb, var(--color-info) 14%, transparent);
+  --color-danger-line: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  --color-warn-line: color-mix(in srgb, var(--color-warn) 40%, transparent);
+  --color-success-line: color-mix(in srgb, var(--color-success) 40%, transparent);
+  --color-info-line: color-mix(in srgb, var(--color-info) 40%, transparent);
+}
+
+[data-theme="dark"] .sidebar-scope {
+  --color-surface: #161a21;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
+@media (min-width: 1024px) {
+  html {
+    font-size: 106.25%;
+  }
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-canvas);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family:
-    "Pretendard",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Apple SD Gothic Neo",
-    "Malgun Gothic",
-    "Segoe UI",
-    "Noto Sans KR",
-    Roboto,
-    sans-serif;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--color-brand);
 }
 
 @layer utilities {
@@ -67,7 +134,12 @@ body {
   select:focus,
   select:focus-visible {
     outline: none;
-    box-shadow: none;
-    border-color: #9ca3af;
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 1px var(--color-brand);
   }
+}
+
+:where(a, button, summary, [role="tab"]):focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
 }

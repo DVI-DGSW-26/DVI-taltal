@@ -16,14 +16,14 @@ export default function Error({
 
   return (
     <div className="flex flex-col items-center gap-4 py-24 text-center">
-      <h2 className="text-lg font-semibold">문제가 발생했습니다</h2>
-      <p className="max-w-md text-sm text-gray-500">
+      <h2 className="text-xl font-semibold">문제가 발생했습니다</h2>
+      <p className="text-fg-muted max-w-md text-sm">
         목록을 불러오는 중 오류가 났습니다. 잠시 후 다시 시도해 주세요.
       </p>
       <button
         type="button"
         onClick={reset}
-        className="bg-brand-500 hover:bg-brand-600 inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-white"
+        className="bg-brand hover:bg-brand-hover text-on-brand inline-flex h-10 items-center gap-1.5 rounded-md px-4 text-sm font-semibold"
       >
         <RotateCcw size={16} aria-hidden />
         다시 시도

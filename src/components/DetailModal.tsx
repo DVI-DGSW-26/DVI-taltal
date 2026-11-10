@@ -15,20 +15,20 @@ export function DetailModal({ children, onClose }: { children: ReactNode; onClos
   return (
     <div
       role="presentation"
-      className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-black/50 p-4 sm:items-center"
+      className="fixed inset-0 z-[70] flex items-start justify-center overflow-y-auto bg-black/40 p-4 sm:items-center dark:bg-black/60"
       onClick={onClose}
     >
       <div
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
-        className="relative flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-800 dark:bg-gray-900"
+        className="border-edge bg-surface relative flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border shadow-xl"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="닫기"
-          className="absolute top-4 right-4 z-10 rounded-lg bg-white p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:bg-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-300"
+          className="bg-surface text-fg-muted hover:bg-surface-2 hover:text-fg absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-lg"
         >
           <X size={20} aria-hidden />
         </button>

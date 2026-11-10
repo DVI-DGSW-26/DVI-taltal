@@ -27,9 +27,9 @@ export default async function ProgramDetailPage({ params }: { params: Params }) 
     <article className="mx-auto max-w-4xl space-y-6">
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+        className="text-fg-muted hover:text-fg inline-flex items-center gap-1.5 text-sm"
       >
-        <ArrowLeft size={18} aria-hidden />
+        <ArrowLeft size={16} aria-hidden />
         목록으로
       </Link>
 
