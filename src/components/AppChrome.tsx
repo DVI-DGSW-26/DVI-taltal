@@ -36,8 +36,8 @@ export function AppChrome({ children }: { children: ReactNode }) {
             <LogoutButton />
           </div>
         </header>
-        <main className="w-full max-w-[1800px] flex-1 p-6">{children}</main>
-        <footer className="text-fg-subtle max-w-[1800px] px-6 py-8 text-center text-xs">
+        <main className="mx-auto w-full max-w-[1800px] flex-1 p-6">{children}</main>
+        <footer className="text-fg-subtle mx-auto w-full max-w-[1800px] px-6 py-8 text-center text-xs">
           탈탈 · 지원사업은 매일 자동 수집됩니다. 모든 시각은 KST 기준입니다.
         </footer>
       </div>
