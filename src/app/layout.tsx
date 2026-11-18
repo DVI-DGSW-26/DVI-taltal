@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Providers>
         {/* 사내 공통 "서비스 이동" 버튼 (왼쪽 아래). 서비스 목록은 서비스 허브가 관리한다.
             오른쪽 아래는 FloatingActions 가 쓰고 있어 기본 위치(왼쪽)를 그대로 쓴다. */}
-        <Script src="https://dvi-service-hub.vercel.app/switcher.js" strategy="afterInteractive" />
+        <Script src="https://api.dvi-ind.com/static/switcher/switcher.js" strategy="afterInteractive" />
       </body>
     </html>
   );
